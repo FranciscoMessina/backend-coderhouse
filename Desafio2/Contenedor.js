@@ -13,7 +13,15 @@ class Contenedor {
 					await fs.readFile(path.join(__dirname, this.filename))
 				);
 
+				let currentId = 1;
+
 				newData.forEach(item => {
+					if (data.length > 0) {
+						item.id = data[data.length - 1].id + 1;
+					} else {
+						item.id = currentId;
+						currentId++;
+					}
 					data.push(item);
 				});
 
@@ -31,6 +39,8 @@ class Contenedor {
 				const data = JSON.parse(
 					await fs.readFile(path.join(__dirname, this.filename))
 				);
+
+				newData.id = data.length > 0 ? data[data.length - 1].id + 1 : 1;
 
 				data.push(newData);
 
@@ -72,7 +82,7 @@ class Contenedor {
 
 			const newData = data.filter((item, index) => item.id !== id);
 
-			console.log(newData);
+			// console.log(newData);
 
 			await fs.writeFile(
 				path.join(__dirname, this.filename),
@@ -120,6 +130,32 @@ const container = new Contenedor('products.json');
 // 	},
 // ]);
 
-// container.deleteById(3)
+container.save([
+	{
+		title: 'Test',
+		price: 260,
+		thumbnail: 'A long link',
+	},
+	{
+		title: 'Escuadra',
+		price: 123.45,
+		thumbnail:
+			'https://cdn3.iconfinder.com/data/icons/education-209/64/ruler-triangle-stationary-school-256.png',
+	},
+	{
+		title: 'Calculadora',
+		price: 234.56,
+		thumbnail:
+			'https://cdn3.iconfinder.com/data/icons/education-209/64/calculator-math-tool-school-256.png',
+	},
+	{
+		title: 'Globo Terráqueo',
+		price: 345.67,
+		thumbnail:
+			'https://cdn3.iconfinder.com/data/icons/education-209/64/globe-earth-geograhy-planet-school-256.png',
+	},
+]);
+
+// container.deleteById(4);
 // container.getById(1).then(res => console.log(res));
 // container.getAll().then(res => console.log(res));

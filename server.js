@@ -3,24 +3,27 @@ const Contenedor = require('./Contenedor');
 
 const app = express();
 
-app.get('/products', async (req, res) => {
-	const productsFile = new Contenedor('products.json');
+const routes = require('./routes.js');
 
-	const products = await productsFile.getAll();
+app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-	res.json(products);
+app.get('/', (req, res) => {
+	res.send('index.html');
 });
 
-app.get('/randomProduct', async (req, res) => {
-	const productsFile = new Contenedor('products.json');
+app.use('/api/productos', routes);
 
-	const products = await productsFile.getAll();
-
-	const random = Math.floor(Math.random() * products.length);
-
-	res.json(products[random]);
+app.use((err, req, res, next) => {
+	console.log(err);
+	res.status(500).json({ err, message: 'Something went wrong, sorry' });
 });
 
 app.listen('8080', () => {
 	console.log(`Servidor corriendo en puerto 8080`);
+});
+
+app.on('error', err => {
+	console.log(`Algo salio mal: ${err}`);
 });

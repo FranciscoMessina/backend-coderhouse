@@ -70,6 +70,8 @@ class Contenedor {
 					path.join(__dirname, this.filename),
 					JSON.stringify(data, null, 2)
 				);
+
+				return newData;
 			} catch (err) {
 				console.log(err);
 			}
@@ -82,12 +84,45 @@ class Contenedor {
 				await fs.readFile(path.join(__dirname, this.filename))
 			);
 
-			const match = data.filter((item, index) => item.id === id);
+			const match = data.filter((item, index) => {
+				if (item.id === id) return item;
+			});
 			if (match.length) {
 				return match;
 			}
 
-			return 'Item not found';
+			return null;
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
+	async update(id, data) {
+		try {
+			const products = JSON.parse(
+				await fs.readFile(path.join(__dirname, this.filename))
+			);
+
+			let updatedProduct;
+
+			const updatedProducts = products.map(product => {
+				if (product.id == id) {
+					product = {
+						...product,
+						...data,
+					};
+
+					updatedProduct = product;
+				}
+				return product;
+			});
+
+			await fs.writeFile(
+				path.join(__dirname, this.filename),
+				JSON.stringify(updatedProducts, null, 2)
+			);
+
+			return updatedProduct;
 		} catch (err) {
 			console.log(err);
 		}
@@ -107,7 +142,13 @@ class Contenedor {
 				await fs.readFile(path.join(__dirname, this.filename))
 			);
 
-			const newData = data.filter((item, index) => item.id !== id);
+			let deletedItem;
+			console.log(deletedItem);
+
+			const newData = data.filter((item, index) => {
+				if (item.id !== id) return item;
+				deletedItem = item;
+			});
 
 			// console.log(newData);
 
@@ -115,6 +156,8 @@ class Contenedor {
 				path.join(__dirname, this.filename),
 				JSON.stringify(newData, null, 2)
 			);
+
+			return deletedItem;
 		} catch (err) {
 			console.log(err);
 		}

@@ -1,86 +1,58 @@
 const { Router } = require('express');
-const Contenedor = require('./Contenedor');
+const Productos = require('./Productos');
 
 const router = Router();
-const productsFile = new Contenedor('products.json');
+const products = new Productos();
 
-router.get('/', async (req, res) => {
-	try {
-		const products = await productsFile.getAll();
+router.get('/', (req, res) => {
+	const data = products.getAll();
 
-		res.json(products);
-	} catch (error) {
-		console.log({ error });
-		res.json(error);
-	}
+	res.json(data);
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', (req, res) => {
 	const { id } = req.params;
 
-	try {
-		const product = await productsFile.getById(parseInt(id));
-		console.log(product);
+	const product = products.getById(id);
 
-		if (!product) {
-			return res.json({ error: 'producto no encontrado' });
-		}
-
-		res.json(product);
-	} catch (error) {
-		console.log({ error });
-		res.json(error);
+	if (!product) {
+		return res.json({ error: 'producto no encontrado' });
 	}
+
+	res.json(product);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
 	const { title, price, thumbnail } = req.body;
 
-	console.log({ title, price, thumbnail });
+	const product = products.addProduct({
+		title,
+		price,
+		thumbnail,
+	});
 
-	try {
-		const product = await productsFile.save({
-			title,
-			price,
-			thumbnail,
-		});
-
-		res.json(product);
-	} catch (error) {
-		console.log({ error });
-		res.json(error);
-	}
+	res.json(product);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', (req, res) => {
 	const { id } = req.params;
 	const { title, price, thumbnail } = req.body;
 
-	try {
-		const product = await productsFile.update(parseInt(id), {
-			title,
-			price,
-			thumbnail,
-		});
+	const product = products.update(id, {
+		title,
+		price,
+		thumbnail,
+	});
 
-		res.json(product);
-	} catch (error) {
-		console.log({ error });
-		res.json(error);
-	}
+	res.json(product);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', (req, res) => {
 	const { id } = req.params;
 
-	try {
-		const product = await productsFile.deleteById(parseInt(id));
+	const product = products.deleteById(id);
 
-		res.json(product);
-	} catch (error) {
-		console.log({ error });
-		res.json(error);
-	}
+	res.json(product);
 });
 
 module.exports = router;

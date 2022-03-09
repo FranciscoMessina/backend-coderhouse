@@ -7,7 +7,7 @@ const routes = require('./routes.js');
 
 app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
 	res.send('index.html');
@@ -20,8 +20,10 @@ app.use((err, req, res, next) => {
 	res.status(500).json({ err, message: 'Something went wrong, sorry' });
 });
 
-app.listen('8080', () => {
-	console.log(`Servidor corriendo en puerto 8080`);
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+	console.log(`Servidor corriendo en puerto ${PORT}`);
 });
 
 app.on('error', err => {

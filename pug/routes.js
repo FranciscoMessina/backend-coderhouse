@@ -5,9 +5,10 @@ const router = Router();
 const products = new Productos();
 
 router.get('/', (req, res) => {
-	const data = products.getAll();
+	const productos = products.getAll();
+	// const productos = [];
 
-	res.json(data);
+	res.render('list', { productos });
 });
 
 router.get('/:id', (req, res) => {
@@ -25,13 +26,13 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
 	const { title, price, thumbnail } = req.body;
 
-	const product = products.addProduct({
+	products.addProduct({
 		title,
 		price,
 		thumbnail,
 	});
 
-	res.json(product);
+	res.redirect('/');
 });
 
 router.put('/:id', (req, res) => {

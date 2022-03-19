@@ -1,15 +1,17 @@
 class Productos {
 	productos = [
 		{
-			title: 'Maqueta',
+			title: 'Castillo Embrujado',
 			price: 500,
-			thumbnail: 'lognstring uurl',
+			thumbnail:
+				'https://cdn3.iconfinder.com/data/icons/fantasy-and-role-play-game-adventure-quest/512/Castle-256.png',
 			id: 1,
 		},
 		{
-			title: 'Hola2',
+			title: 'Casco Legendario',
 			price: 500,
-			thumbnail: 'lognstring uurl',
+			thumbnail:
+				'https://cdn3.iconfinder.com/data/icons/fantasy-and-role-play-game-adventure-quest/512/Helmet.jpg-256.png',
 			id: 2,
 		},
 	];

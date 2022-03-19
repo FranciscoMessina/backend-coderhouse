@@ -1,19 +1,21 @@
 const express = require('express');
-const Contenedor = require('./Contenedor');
 
 const app = express();
 
 const routes = require('./routes.js');
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
 
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-	res.send('index.html');
+	res.render('main', { title: 'Formulario' });
 });
 
-app.use('/api/productos', routes);
+app.use('/productos', routes);
 
 app.use((err, req, res, next) => {
 	console.log(err);

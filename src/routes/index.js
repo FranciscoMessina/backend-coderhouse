@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router()
 const passport = require('passport');
+const { fork } = require('child_process');
 
 const products = require('../models/fs/Productos');
 const mensajes = require('../models/fs/Mensajes');
@@ -8,7 +9,8 @@ const mensajes = require('../models/fs/Mensajes');
 
 const { Strategy: LocalStrategy } = require('passport-local');
 const User = require('../models/User');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const path = require('path');
 
 
 
@@ -120,6 +122,40 @@ router.get('/logout', async (req, res) => {
    })
 
 });
+
+router.get('/info', async (req, res) => {
+
+   const info = {
+      args: process.argv.slice(2),
+      os: process.platform,
+      node_v: process.version,
+      memory: process.memoryUsage(),
+      path: process.execPath,
+      pid: process.pid,
+      dir: process.cwd()
+   }
+
+   console.log(info);
+
+   res.render('info', { title: 'Info', info });
+})
+
+router.get('/api/random', (req, res) => {
+   const result = {}
+
+   const amount = parseInt(req.query.cant) || 100_000_000
+
+   const forked = fork(path.join(__dirname, './random.js'))
+
+   forked.send({ start: true, amount })
+
+
+   forked.on('message', (result) => {
+
+      res.json(result)
+
+   })
+})
 
 
 module.exports = router

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const { engine: handlebars } = require('express-handlebars');
 const session = require('express-session');
@@ -16,7 +17,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 
-mongoose.connect('mongodb://fran:proyectocoder@cluster1-shard-00-00.zzoqs.mongodb.net:27017,cluster1-shard-00-01.zzoqs.mongodb.net:27017,cluster1-shard-00-02.zzoqs.mongodb.net:27017/ecommerce?replicaSet=atlas-wwir4a-shard-0&ssl=true&authSource=admin').then(res => console.log('Conectado a DB')).catch(err => console.log(err))
+mongoose.connect(process.env.MONGO_URI).then(res => console.log('Conectado a DB')).catch(err => console.log(err))
 
 app.engine(
    'hbs',
@@ -43,8 +44,7 @@ app.use(
          maxAge: 1000 * 60 * 10,
       },
       store: MongoStore.create({
-         mongoUrl:
-            'mongodb://fran:proyectocoder@cluster1-shard-00-00.zzoqs.mongodb.net:27017,cluster1-shard-00-01.zzoqs.mongodb.net:27017,cluster1-shard-00-02.zzoqs.mongodb.net:27017/ecommerce?replicaSet=atlas-wwir4a-shard-0&ssl=true&authSource=admin',
+         mongoUrl: process.env.MONGO_URI,
          dbName: 'ecommerce',
          collectionName: 'sessions',
       }),
@@ -102,7 +102,11 @@ app.use((err, req, res, next) => {
    res.status(500).json({ err, message: 'Something went wrong, sorry' });
 });
 
-const PORT = process.env.PORT || 3005;
+const args = require('minimist')(process.argv.slice(2));
+
+console.log(args);
+
+const PORT = args.port || 8080;
 
 server.listen(PORT, () => {
    console.log(`Servidor corriendo en puerto http://localhost:${PORT}`);

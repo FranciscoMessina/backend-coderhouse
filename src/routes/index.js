@@ -11,6 +11,7 @@ const { Strategy: LocalStrategy } = require('passport-local');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const path = require('path');
+const { cpus } = require('os');
 
 
 
@@ -129,10 +130,11 @@ router.get('/info', async (req, res) => {
       args: process.argv.slice(2),
       os: process.platform,
       node_v: process.version,
-      memory: process.memoryUsage(),
+      memory: process.memoryUsage().heapUsed,
       path: process.execPath,
       pid: process.pid,
-      dir: process.cwd()
+      dir: process.cwd(),
+      cpus: cpus().length
    }
 
    console.log(info);

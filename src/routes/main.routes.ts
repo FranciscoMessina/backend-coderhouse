@@ -5,6 +5,6 @@ const mainRouter = Router({});
 
 mainRouter.get('/', MainController.renderMainPage);
 
-mainRouter.get('/info', MainController.renderServeInfoPage);
+mainRouter.get('/info', MainController.renderServerInfoPage);
 
 export { mainRouter };

@@ -9,6 +9,7 @@ import { cpus } from 'os';
 import { DaoFactory, Message, Product } from './daos';
 import './middlewares/passport';
 
+
 dotenv.config();
 // coomment
 
@@ -31,7 +32,6 @@ const main = async () => {
   const messageDao = DaoFactory.getDao('message', 'mongo');
 
   console.log(productDao.uid === productDao2.uid);
-  
 
   io.on('connection', (socket) => {
     console.log('New conection', socket.id);

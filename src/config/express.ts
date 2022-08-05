@@ -7,8 +7,13 @@ import { sessionToLocals } from '../middlewares';
 import passport from 'passport';
 import compression from 'compression';
 import { loggerInfo, loggerWarning } from '../utils';
+import { graphqlHTTP } from 'express-graphql';
+import { buildSchema } from 'graphql';
+import { schema } from '../graphql';
 
 export const createApp = (): Application => {
+
+
   const app = express();
 
   app.use(compression());
@@ -29,6 +34,14 @@ export const createApp = (): Application => {
         dbName: 'ecommerce',
         collectionName: 'sessions',
       }),
+    })
+  );
+
+  app.use(
+    '/graphql',
+    graphqlHTTP({
+      schema: schema,
+      graphiql: true,
     })
   );
 
